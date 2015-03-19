@@ -76,6 +76,7 @@ A helper is provided for formatting custom filepaths beyond the Gemoji default. 
 ```ruby
 fish = Emoji.find_by_alias('tropical_fish')
 EmojiParser.filepath(fish, '//cdn.fu/emoji/')
+
 # "//cdn.fu/emoji/1F420.png"
 ```
 
