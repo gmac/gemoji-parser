@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email         = ["greg.macwilliam@voxmedia.com"]
   s.summary       = %q{The missing helper methods for GitHub's Gemoji gem.}
   s.description   = %q{Parses emoji unicode symbols and string tokens, allowing for customizable transformations.}
-  s.homepage      = ""
+  s.homepage      = "https://github.com/gmac/gemoji-parser"
   s.license       = "MIT"
 
   s.files         = `git ls-files -z`.split("\x0")
