@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.authors       = ["Greg MacWilliam"]
   s.email         = ["greg.macwilliam@voxmedia.com"]
   s.summary       = %q{The missing helper methods for GitHub's Gemoji gem.}
-  s.description   = %q{Parses emoji unicode symbols and string tokens, allowing for customizable transformations.}
+  s.description   = %q{Expands GitHub Gemoji to parse unicode and token emoji symbols into custom formats.}
   s.homepage      = "https://github.com/gmac/gemoji-parser"
   s.license       = "MIT"
 
@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.required_ruby_version = '> 1.9'
-  
   s.add_dependency "gemoji", ">= 2.1.0"
   s.add_development_dependency "bundler", "~> 1.6"
   s.add_development_dependency "rake", "~> 10.0"

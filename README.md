@@ -12,7 +12,7 @@ gem 'gemoji-parser'
 
 And then execute:
 
-    $ bundle
+    $ bundle install
 
 Or install it yourself as:
 
@@ -20,7 +20,7 @@ Or install it yourself as:
 
 To run tests:
 
-	$ be rake spec
+	$ bundle exec rake spec
 
 ## Usage
 
