@@ -1,7 +1,7 @@
 # gemoji-parser
 
-The missing helper methods for [GitHub's Gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by Gemoji). The parser handles transformations of emoji symbols between unicode (😃), token (`:smile:`), and emoticon (`:-D`) formats; and may perform arbitrary replacement of emoji symbols into custom display formats (such as image tags). Internally, the parses generates highly-optimized regular expressions to maximize parsing performance.
-�
+The missing helper methods for [GitHub's Gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by Gemoji). The parser handles transformations of emoji symbols between unicode (😃), token (`:smile:`), and emoticon (`:-D`) formats; and may perform arbitrary replacement of emoji symbols into custom display formats (such as image tags). Internally, the parses compiles highly-optimized regular expressions to maximize parsing performance.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -20,7 +20,7 @@ Or install it yourself as:
 
 To run tests:
 
-	$ bundle exec rake spec
+    $ bundle exec rake spec
 
 ## Usage
 
@@ -43,7 +43,7 @@ Use the symbol parser methods for custom transformations. All symbol parsers yei
 **Unicode symbols**
 
 ```ruby
-EmojiParser.parse_unicode('Test 🐠') do |emoji|
+EmojiParser.parse_unicode("Test 🐠") do |emoji|
   %Q(<img src="#{emoji.image_filename}" alt=":#{emoji.name}:">).html_safe
 end
 
@@ -53,7 +53,7 @@ end
 **Token symbols**
 
 ```ruby
-EmojiParser.parse_tokens('Test :tropical_fish:') do |emoji|
+EmojiParser.parse_tokens("Test :tropical_fish:") do |emoji|
   %Q(<img src="#{emoji.image_filename}" alt=":#{emoji.name}:">).html_safe
 end
 
@@ -63,7 +63,7 @@ end
 **Emoticon symbols**
 
 ```ruby
-EmojiParser.parse_emoticons('Test ;-)') do |emoji|
+EmojiParser.parse_emoticons("Test ;-)") do |emoji|
   %Q(<img src="#{emoji.image_filename}" alt=":#{emoji.name}:">).html_safe
 end
 
@@ -75,10 +75,10 @@ end
 Use the `parse` method to target multiple symbol types with a single parsing pass. Specific symbol formats to target may be passed as options:
 
 ```ruby
-EmojiParser.parse('Test 🐠 :scream: ;-)') { |emoji| "[#{emoji.name}]" }
+EmojiParser.parse("Test 🐠 :scream: ;-)") { |emoji| "[#{emoji.name}]" }
 # 'Test [tropical_fish] [scream] [wink]'
 
-EmojiParser.parse('Test 🐠 :scream: ;-)', unicode: true, tokens: true) do |emoji|
+EmojiParser.parse("Test 🐠 :scream: ;-)", unicode: true, tokens: true) do |emoji|
   "[#{emoji.name}]"
 end
 # 'Test [tropical_fish] [scream] ;-)'
@@ -87,9 +87,10 @@ end
 While the `parse` method is heavier to run than the discrete parsing methods for each symbol type (`parse_unicode`, etc...), it has the advantage of avoiding multiple parsing passes. This is handy if you want parsed symbols to output new symbols in a different format, such as generating image tags that include a symbol in their alt text:
 
 ```ruby
-EmojiParser.parse('Test 🐠 ;-)') do |emoji|
+EmojiParser.parse("Test 🐠 ;-)") do |emoji|
   %Q(<img src="#{emoji.image_filename}" alt=":#{emoji.name}:">).html_safe
 end
+
 # 'Test <img src="unicode/1f420.png" alt=":tropical_fish:"> <img src="unicode/1f609.png" alt=":wink:">'
 ```
 
@@ -99,7 +100,7 @@ Use the `find` method to derive `Emoji::Character` instances from any symbol for
 
 ```ruby
 emoji = EmojiParser.find(🐠)
-emoji = EmojiParser.find('tropical_fish')
+emoji = EmojiParser.find('see_no_evil')
 emoji = EmojiParser.find(';-)')
 ```
 
@@ -136,10 +137,13 @@ EmojiParser.emoticons[':@'] = :angry
 Emoji.create('bill_clinton')
 EmojiParser.emoticons['=:o]'] = :bill_clinton
 
-# IMPORTANT: rehash once after adding new symbols to Emoji core, or to the EmojiParser:
+# IMPORTANT:
+# Rehash once after adding new symbols to Emoji core, or to the EmojiParser:
 EmojiParser.rehash!
 ```
 
 ## Shoutout
 
 Thanks to the GitHub team for the [Gemoji](https://github.com/github/gemoji) gem, and my esteemed colleague Michael Lovitt for the fantastic [Rubular](http://rubular.com/) regex tool.
+
+🙈 🙊 🙉
