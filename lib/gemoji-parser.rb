@@ -60,11 +60,10 @@ module EmojiParser
       u = emoji.unicode_aliases.map do |str|
         str.codepoints.map { |c| '\u{%s}' % c.to_s(16).rjust(4, '0') }.join('')
       end
-      # Append unicode patterns longest first for broader match:
-      patterns.concat u.sort! { |a, b| b.length - a.length }
+      patterns << unicode_matcher(u)
     end
 
-    @unicode_pattern = patterns.join('|')
+    @unicode_pattern = patterns.compact.join('|')
     @unicode_regex = Regexp.new("(#{@unicode_pattern})")
   end
 
@@ -193,5 +192,28 @@ module EmojiParser
     return nil unless emoji
     return emoji.image_filename unless path
     "#{ path.sub(/\/$/, '') }/#{ emoji.image_filename.split('/').pop }"
+  end
+
+  private
+
+  # Compiles a matcher for unicode patterns.
+  # Does fancy formatting for drastically faster matching.
+  def unicode_matcher(patterns)
+    patterns.sort! { |a, b| b.length - a.length }
+    base = patterns.pop
+    opts = []
+    alts = []
+
+    patterns.reverse_each do |pattern|
+      if pattern.start_with?(base)
+        opts << pattern.sub(base, '')
+      else
+        alts << pattern
+      end
+    end
+
+    base += "(?:#{ opts.join('|') })?" if opts.any?
+    alts << base
+    alts.join('|') if alts.any?
   end
 end

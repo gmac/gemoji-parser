@@ -114,6 +114,11 @@ describe EmojiParser do
       parsed = EmojiParser.parse(test_mixed, tokens: true, emoticons: true) { |e| 'X' }
       expect(parsed).to eq 'Test 🙈 🙊 🙉 X :invalid: X. X'
     end
+
+    it 'allows symbols to safely insert other symbol types without getting re-parsed.' do
+      parsed = EmojiParser.parse('🙈 🙊 :hear_no_evil:') { |e| ":#{e.name}:" }
+      expect(parsed).to eq ':see_no_evil: :speak_no_evil: :hear_no_evil:'
+    end
   end
 
   describe '#tokenize' do
