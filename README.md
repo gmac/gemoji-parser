@@ -38,7 +38,7 @@ EmojiParser.detokenize("Test :see_no_evil: :speak_no_evil: :hear_no_evil:")
 
 ### Symbol Parsing
 
-Use the symbol parser methods for custom transformations. All symbol parsers yield `[Emoji::Character](https://github.com/github/gemoji/blob/master/lib/emoji/character.rb)` instances into the parsing block for custom formatting.
+Use the symbol parser methods for custom transformations. All symbol parsers yield [Emoji::Character](https://github.com/github/gemoji/blob/master/lib/emoji/character.rb) instances into the parsing block for custom formatting.
 
 **Unicode symbols**
 
@@ -96,7 +96,7 @@ end
 
 ### Lookups & File Paths
 
-Use the `find` method to derive `[Emoji::Character](https://github.com/github/gemoji/blob/master/lib/emoji/character.rb)` instances from any symbol format (unicode, token, emoticon):
+Use the `find` method to derive [Emoji::Character](https://github.com/github/gemoji/blob/master/lib/emoji/character.rb) instances from any symbol format (unicode, token, emoticon):
 
 ```ruby
 emoji = EmojiParser.find(🐠)
