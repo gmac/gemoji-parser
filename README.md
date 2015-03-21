@@ -1,6 +1,6 @@
 # gemoji-parser
 
-The missing helper methods for [GitHub's Gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by Gemoji). The parser handles transformations of emoji symbols between unicode (😃), token (`:smile:`), and emoticon (`:-D`) formats; and may perform arbitrary replacement of emoji symbols into custom display formats (such as image tags). Internally, highly-optimized regular expressions are generated and cached to maximize parsing efficiency.
+The missing helper methods for [GitHub's gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by *gemoji*). The parser handles transformations of emoji symbols between unicode (😃), token (`:smile:`), and emoticon (`:-D`) formats; and may perform arbitrary replacement of emoji symbols into custom display formats (such as image tags). Internally, highly-optimized regular expressions are generated and cached to maximize parsing efficiency.
 
 ## Installation
 
@@ -38,7 +38,7 @@ EmojiParser.detokenize("Test :see_no_evil: :speak_no_evil: :hear_no_evil:")
 
 ### Symbol Parsing
 
-Use the symbol parser methods for custom transformations. All symbol parsers yeild [Emoji::Character](https://github.com/github/gemoji/blob/master/lib/emoji/character.rb) instances into the parsing block for custom formatting.
+Use the symbol parser methods for custom transformations. All symbol parsers yield `[Emoji::Character](https://github.com/github/gemoji/blob/master/lib/emoji/character.rb)` instances into the parsing block for custom formatting.
 
 **Unicode symbols**
 
@@ -96,7 +96,7 @@ end
 
 ### Lookups & File Paths
 
-Use the `find` method to derive `Emoji::Character` instances from any symbol format (unicode, token, emoticon):
+Use the `find` method to derive `[Emoji::Character](https://github.com/github/gemoji/blob/master/lib/emoji/character.rb)` instances from any symbol format (unicode, token, emoticon):
 
 ```ruby
 emoji = EmojiParser.find(🐠)
@@ -104,13 +104,13 @@ emoji = EmojiParser.find('see_no_evil')
 emoji = EmojiParser.find(';-)')
 ```
 
-Use the `filepath` method to derive an image filepath from any symbol format (unicode, token, emoticon). You may optionally provide a custom path that overrides the Gemoji default location (this is useful if you'd like to reference your images from a CDN):
+Use the `image_path` helper to derive an image filepath from any symbol format (unicode, token, emoticon). You may optionally provide a custom path that overrides the *gemoji* default location (this is useful if you'd like to reference your images from a CDN):
 
 ```ruby
-EmojiParser.filepath('tropical_fish')
+EmojiParser.image_path('tropical_fish')
 # "unicode/1f420.png"
 
-EmojiParser.filepath('tropical_fish', '//cdn.fu/emoji/')
+EmojiParser.image_path('tropical_fish', '//cdn.fu/emoji/')
 # "//cdn.fu/emoji/1f420.png"
 ```
 
@@ -118,7 +118,7 @@ EmojiParser.filepath('tropical_fish', '//cdn.fu/emoji/')
 
 **Emoji**
 
-The parser plays nicely with custom emoji defined through the Gemoji core. You just need to call `rehash!` once after adding new emoji symbols to regenerate the parser's regex cache:
+The parser plays nicely with custom emoji defined through the *gemoji* core. You just need to call `rehash!` once after adding new emoji symbols to regenerate the parser's regex cache:
 
 ```ruby
 Emoji.create('boxing_kangaroo') # << WHY IS THIS NOT STANDARD?!
@@ -127,7 +127,7 @@ EmojiParser.rehash!
 
 **Emoticons**
 
-Emoticon patterns are defined through the parser, and are simply mapped to an emoji name that exists within the Gemoji core (this can be a standard emoji, or a custom emoji that you have added). To see the built-in emoticons, simply inspect the `EmojiParser.emoticons` hash. For custom emoticons:
+Emoticon patterns are defined through the parser, and are simply mapped to an emoji name that exists within the *gemoji* core (this can be a standard emoji, or a custom emoji that you have added). To see default emoticons, inspect the `EmojiParser.emoticons` hash. For custom emoticons:
 
 ```ruby
 # Alias a standard emoji:
@@ -144,6 +144,6 @@ EmojiParser.rehash!
 
 ## Shoutout
 
-Thanks to the GitHub team for the [Gemoji](https://github.com/github/gemoji) gem, and my esteemed colleague Michael Lovitt for the fantastic [Rubular](http://rubular.com/) regex tool.
+Thanks to the GitHub team for the [gemoji](https://github.com/github/gemoji) gem, and my esteemed colleague Michael Lovitt for the fantastic [Rubular](http://rubular.com/) regex tool (it has been invaluable for this project).
 
 🙈 🙊 🙉
