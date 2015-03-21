@@ -1,6 +1,6 @@
 # gemoji-parser
 
-The missing helper methods for [GitHub's Gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by Gemoji). The parser handles transformations of emoji symbols between unicode (😃), token (`:smile:`), and emoticon (`:-D`) formats; and may perform arbitrary replacement of emoji symbols into custom display formats (such as image tags). Internally, the parses compiles highly-optimized regular expressions to maximize parsing performance.
+The missing helper methods for [GitHub's Gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by Gemoji). The parser handles transformations of emoji symbols between unicode (😃), token (`:smile:`), and emoticon (`:-D`) formats; and may perform arbitrary replacement of emoji symbols into custom display formats (such as image tags). Internally, highly-optimized regular expressions are generated and cached to maximize parsing efficiency.
 
 ## Installation
 
@@ -72,19 +72,19 @@ end
 
 **All symbol types**
 
-Use the `parse` method to target multiple symbol types with a single parsing pass. Specific symbol formats to target may be passed as options:
+Use the `parse` method to target all symbol types with a single parsing pass. Specific symbol types may be excluded using options:
 
 ```ruby
 EmojiParser.parse("Test 🐠 :scream: ;-)") { |emoji| "[#{emoji.name}]" }
 # 'Test [tropical_fish] [scream] [wink]'
 
-EmojiParser.parse("Test 🐠 :scream: ;-)", unicode: true, tokens: true) do |emoji|
+EmojiParser.parse("Test 🐠 :scream: ;-)", emoticons: false) do |emoji|
   "[#{emoji.name}]"
 end
 # 'Test [tropical_fish] [scream] ;-)'
 ```
 
-While the `parse` method is heavier to run than the discrete parsing methods for each symbol type (`parse_unicode`, etc...), it has the advantage of avoiding multiple parsing passes. This is handy if you want parsed symbols to output new symbols in a different format, such as generating image tags that include a symbol in their alt text:
+While the `parse` method is heavier to run than the discrete parsing methods for each symbol type (`parse_unicode`, `parse_tokens`, etc...), it has the advantage of avoiding multiple parsing passes. This is handy if you want parsed symbols to output new symbols in a different format, such as generating image tags that include a symbol in their alt text:
 
 ```ruby
 EmojiParser.parse("Test 🐠 ;-)") do |emoji|
