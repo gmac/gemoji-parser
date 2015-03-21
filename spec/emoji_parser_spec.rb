@@ -101,17 +101,17 @@ describe EmojiParser do
     end
 
     it 'replaces valid symbols of specified types (unicode, tokens).' do
-      parsed = EmojiParser.parse(test_mixed, unicode: true, tokens: true) { |e| 'X' }
+      parsed = EmojiParser.parse(test_mixed, emoticons: false) { |e| 'X' }
       expect(parsed).to eq 'Test X X X X :invalid: X. :o)'
     end
 
     it 'replaces valid symbols of specified types (unicode, emoticons).' do
-      parsed = EmojiParser.parse(test_mixed, unicode: true, emoticons: true) { |e| 'X' }
+      parsed = EmojiParser.parse(test_mixed, tokens: false) { |e| 'X' }
       expect(parsed).to eq 'Test X X X :cold_sweat: :invalid: :tropical_fish:. X'
     end
 
     it 'replaces valid symbols of specified types (tokens, emoticons).' do
-      parsed = EmojiParser.parse(test_mixed, tokens: true, emoticons: true) { |e| 'X' }
+      parsed = EmojiParser.parse(test_mixed, unicode: false) { |e| 'X' }
       expect(parsed).to eq 'Test 🙈 🙊 🙉 X :invalid: X. X'
     end
 

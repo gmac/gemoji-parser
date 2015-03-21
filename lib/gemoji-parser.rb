@@ -207,16 +207,15 @@ module EmojiParser
   # DEPRECATED, TODO: remove in v1.2.x
   def parse_all(text)
     puts 'EmojiParser: #parse_all is deprecated. Please use #parse.'
-    parse(text, unicode: true, tokens: true)
+    parse(text, emoticons: false)
   end
 
   # Parses all emoji unicode, tokens, and emoticons within a string.
   # - Block: performs all symbol transformations.
   # - Options: unicode:boolean, tokens:boolean, emoticons:boolean
   def parse(text, opts={})
-    if opts.none?
-      opts = { unicode: true, tokens: true, emoticons: true }
-    elsif opts.one?
+    opts = { unicode: true, tokens: true, emoticons: true }.merge(opts)
+    if opts.one?
       return parse_unicode(text)   { |e| yield e } if opts[:unicode]
       return parse_tokens(text)    { |e| yield e } if opts[:tokens]
       return parse_emoticons(text) { |e| yield e } if opts[:emoticons]
