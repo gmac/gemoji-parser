@@ -1,6 +1,6 @@
 # gemoji-parser
 
-The missing helper methods for [GitHub's Gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by Gemoji). The parser includes quick tokenizers for transforming unicode symbols (🐠) into token symbols (`:tropical_fish:`), and arbitrary block replacement methods for custom formatting of symbols.
+The missing helper methods for [GitHub's Gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by Gemoji). The parser performs transformation of emoji symbols between unicode (🐠), token (`:tropical_fish:`), and emoticon (`:-D`) formats. It also provides arbitrary block replacement methods for transforming all symbols into custom display formats (such as image tags).
 
 ## Installation
 
