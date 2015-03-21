@@ -1,7 +1,7 @@
 # gemoji-parser
 
-The missing helper methods for [GitHub's Gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by Gemoji). The parser performs transformation of emoji symbols between unicode (🐠), token (`:tropical_fish:`), and emoticon (`:-D`) formats. It also provides arbitrary block replacement methods for transforming all symbols into custom display formats (such as image tags).
-
+The missing helper methods for [GitHub's Gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by Gemoji). The parser handles transformations of emoji symbols between unicode (😃), token (`:smile:`), and emoticon (`:-D`) formats; and may perform arbitrary replacement of emoji symbols into custom display formats (such as image tags). Internally, the parses generates highly-optimized regular expressions to maximize parsing performance.
+�
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -24,10 +24,9 @@ To run tests:
 
 ## Usage
 
-
 ### Tokenizing
 
-These methods perform basic conversions of unicode symbols to token symbols, and vice versa.
+The tokenizer methods perform basic conversions of unicode symbols into token symbols, and vice versa.
 
 ```ruby
 EmojiParser.tokenize("Test 🙈 🙊 🙉")
@@ -37,9 +36,9 @@ EmojiParser.detokenize("Test :see_no_evil: :speak_no_evil: :hear_no_evil:")
 # "Test 🙈 🙊 🙉"
 ```
 
-### Block Parsing
+### Symbol Parsing
 
-For custom symbol transformations, use the block parser methods. All parsers yeild Gemoji [Emoji::Character](https://github.com/github/gemoji/blob/master/lib/emoji/character.rb) instances into the parsing block for custom formatting.
+Use the symbol parser methods for custom transformations. All symbol parsers yeild [Emoji::Character](https://github.com/github/gemoji/blob/master/lib/emoji/character.rb) instances into the parsing block for custom formatting.
 
 **Unicode symbols**
 
@@ -71,56 +70,76 @@ end
 # 'Test <img src="unicode/1f609.png" alt=":wink:">'
 ```
 
-**Parsing all symbol types**
+**All symbol types**
 
-If you want to parse multiple symbol formats in a single pass, then use the `parse` method. This has the advantage of allowing parsed symbols to be re-inserted into the text without getting re-parsed by subsequent passes (ex: a unicode symbol parsed into an image tag may safely use its token as the image alt text).
-
-```ruby
-EmojiParser.parse('🐠 :tropical_fish: ;-)') { |emoji| emoji.hex_inspect }
-
-# '1f420 1f420 1f609'
-```
-
-The `parse` method also accepts options specifying which symbol types to parse:
+Use the `parse` method to target multiple symbol types with a single parsing pass. Specific symbol formats to target may be passed as options:
 
 ```ruby
-EmojiParser.parse('🐠 :tropical_fish: ;-)', unicode: true, tokens: true) do |emoji|
-  emoji.hex_inspect
+EmojiParser.parse('Test 🐠 :scream: ;-)') { |emoji| "[#{emoji.name}]" }
+# 'Test [tropical_fish] [scream] [wink]'
+
+EmojiParser.parse('Test 🐠 :scream: ;-)', unicode: true, tokens: true) do |emoji|
+  "[#{emoji.name}]"
 end
-
-# 'Test 1f420 1f420 ;-)'
+# 'Test [tropical_fish] [scream] ;-)'
 ```
 
-Note that the discrete parsing methods for each symbol type are smaller and simpler than the `parse` macro method. If you don't need to hit multiple symbol types in a single pass, then favor the discrete methods.
+While the `parse` method is heavier to run than the discrete parsing methods for each symbol type (`parse_unicode`, etc...), it has the advantage of avoiding multiple parsing passes. This is handy if you want parsed symbols to output new symbols in a different format, such as generating image tags that include a symbol in their alt text:
+
+```ruby
+EmojiParser.parse('Test 🐠 ;-)') do |emoji|
+  %Q(<img src="#{emoji.image_filename}" alt=":#{emoji.name}:">).html_safe
+end
+# 'Test <img src="unicode/1f420.png" alt=":tropical_fish:"> <img src="unicode/1f609.png" alt=":wink:">'
+```
 
 ### Lookups & File Paths
 
-To quickly locate `Emoji::Character` instances using any symbol format (unicode, token, emoticon), use the `find` method:
-
-```
-EmojiHelper.find(🐠)
-EmojiHelper.find('tropical_fish')
-EmojiHelper.find(';-)')
-```
-
-To quickly access the filepath for any symbol format, use the `filepath` method. You may optionally provide a filepath that overrides the Gemoji default (this may be useful if you'd like to upload your images to CDN, and simply reference them from there):
+Use the `find` method to derive `Emoji::Character` instances from any symbol format (unicode, token, emoticon):
 
 ```ruby
-EmojiHelper.find('tropical_fish')
+emoji = EmojiParser.find(🐠)
+emoji = EmojiParser.find('tropical_fish')
+emoji = EmojiParser.find(';-)')
+```
+
+Use the `filepath` method to derive an image filepath from any symbol format (unicode, token, emoticon). You may optionally provide a custom path that overrides the Gemoji default location (this is useful if you'd like to reference your images from a CDN):
+
+```ruby
+EmojiParser.filepath('tropical_fish')
 # "unicode/1f420.png"
 
 EmojiParser.filepath('tropical_fish', '//cdn.fu/emoji/')
 # "//cdn.fu/emoji/1f420.png"
 ```
 
+## Custom Symbols
+
+**Emoji**
+
+The parser plays nicely with custom emoji defined through the Gemoji core. You just need to call `rehash!` once after adding new emoji symbols to regenerate the parser's regex cache:
+
+```ruby
+Emoji.create('boxing_kangaroo') # << WHY IS THIS NOT STANDARD?!
+EmojiParser.rehash!
+```
+
+**Emoticons**
+
+Emoticon patterns are defined through the parser, and are simply mapped to an emoji name that exists within the Gemoji core (this can be a standard emoji, or a custom emoji that you have added). To see the built-in emoticons, simply inspect the `EmojiParser.emoticons` hash. For custom emoticons:
+
+```ruby
+# Alias a standard emoji:
+EmojiParser.emoticons[':@'] = :angry
+
+# Create a custom emoji, and alias it:
+Emoji.create('bill_clinton')
+EmojiParser.emoticons['=:o]'] = :bill_clinton
+
+# IMPORTANT: rehash once after adding new symbols to Emoji core, or to the EmojiParser:
+EmojiParser.rehash!
+```
+
 ## Shoutout
 
-Thanks to the GitHub team for the [Gemoji](https://github.com/github/gemoji) gem. They're handling all the heavy lifting here.
-
-## Contributing
-
-1. Fork it ( https://github.com/gmac/gemoji-parser/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+Thanks to the GitHub team for the [Gemoji](https://github.com/github/gemoji) gem, and my esteemed colleague Michael Lovitt for the fantastic [Rubular](http://rubular.com/) regex tool.
