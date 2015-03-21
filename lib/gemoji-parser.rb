@@ -78,13 +78,6 @@ module EmojiParser
     emoticon_regex(rehash: true)
   end
 
-  # DEPRECATED, TODO: remove in v1.2.x
-  # - Options: rehash:boolean
-  def emoji_regex(opts={})
-    puts 'EmojiParser: #emoji_regex is deprecated. Please use #unicode_regex.'
-    unicode_regex(opts)
-  end
-
   # Creates an optimized regular expression for matching unicode symbols.
   # - Options: rehash:boolean
   def unicode_regex(opts={})
@@ -204,12 +197,6 @@ module EmojiParser
     end
   end
 
-  # DEPRECATED, TODO: remove in v1.2.x
-  def parse_all(text)
-    puts 'EmojiParser: #parse_all is deprecated. Please use #parse.'
-    parse(text, emoticons: false)
-  end
-
   # Parses all emoji unicode, tokens, and emoticons within a string.
   # - Block: performs all symbol transformations.
   # - Options: unicode:boolean, tokens:boolean, emoticons:boolean
@@ -246,10 +233,10 @@ module EmojiParser
     Emoji.find_by_alias(symbol) || Emoji.find_by_unicode(symbol) || nil
   end
 
-  # Gets the file reference for a symbol; optionally with a custom path.
+  # Gets the image file reference for a symbol; optionally with a custom path.
   # - symbol: an <Emoji::Character>, or a unicode/token/emoticon string.
   # - path: a file path to sub into symbol's filename.
-  def filepath(symbol, path=nil)
+  def image_path(symbol, path=nil)
     emoji = find(symbol)
     return nil unless emoji
     return emoji.image_filename unless path

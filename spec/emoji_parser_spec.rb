@@ -167,39 +167,39 @@ describe EmojiParser do
     end
   end
 
-  describe '#filepath' do
+  describe '#image_path' do
     let (:the_emoji) { Emoji.find_by_alias('smiley') }
     let (:the_image) { '1f603.png' }
 
     it 'gets the image filename by emoji character.' do
-      path = EmojiParser.filepath(the_emoji)
+      path = EmojiParser.image_path(the_emoji)
       expect(path).to eq the_emoji.image_filename
     end
 
     it 'gets the image filename by unicode symbol.' do
-      path = EmojiParser.filepath(the_emoji.raw)
+      path = EmojiParser.image_path(the_emoji.raw)
       expect(path).to eq the_emoji.image_filename
     end
 
     it 'gets the image filename by token symbol.' do
-      path = EmojiParser.filepath(the_emoji.name)
+      path = EmojiParser.image_path(the_emoji.name)
       expect(path).to eq the_emoji.image_filename
     end
 
     it 'gets the image filename by emoticon symbol.' do
-      path = EmojiParser.filepath('=)')
+      path = EmojiParser.image_path('=)')
       expect(path).to eq the_emoji.image_filename
     end
 
     it 'formats a Gemoji image path as a custom location (with trailing slash).' do
       custom_path = '//fonts.test.com/emoji/'
-      path = EmojiParser.filepath(the_emoji, custom_path)
+      path = EmojiParser.image_path(the_emoji, custom_path)
       expect(path).to eq "#{ custom_path }#{ the_image }"
     end
 
     it 'formats a Gemoji image path to a custom location (no trailing slash).' do
       custom_path = '//fonts.test.com/emoji'
-      path = EmojiParser.filepath(the_emoji, custom_path)
+      path = EmojiParser.image_path(the_emoji, custom_path)
       expect(path).to eq "#{ custom_path }/#{ the_image }"
     end
   end
