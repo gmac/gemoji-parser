@@ -50,6 +50,14 @@ module EmojiParser
     unicode_regex(opts)
   end
 
+  # Rehashes all cached parser regular expressions.
+  # Call this after adding custom symbols...
+  def rehash!
+    unicode_regex(rehash: true)
+    token_regex(rehash: true)
+    emoticon_regex(rehash: true)
+  end
+
   # Provides a regular expression for matching unicode symbols.
   # - Options: rehash:boolean
   def unicode_regex(opts={})
@@ -60,10 +68,12 @@ module EmojiParser
       u = emoji.unicode_aliases.map do |str|
         str.codepoints.map { |c| '\u{%s}' % c.to_s(16).rjust(4, '0') }.join('')
       end
-      patterns << unicode_matcher(u)
+      # Old way: 10x slower!
+      # patterns.concat u.sort! { |a, b| b.length - a.length }
+      patterns << unicode_matcher(u) if u.any?
     end
 
-    @unicode_pattern = patterns.compact.join('|')
+    @unicode_pattern = patterns.join('|')
     @unicode_regex = Regexp.new("(#{@unicode_pattern})")
   end
 
@@ -196,24 +206,47 @@ module EmojiParser
 
   private
 
-  # Compiles a matcher for unicode patterns.
-  # Does fancy formatting for drastically faster matching.
+  # Compiles an optimized unicode pattern for fast matching.
+  # Matchers use as small a base as possible, with added options. Ex:
+  # 1-char base \w option:  \u{1f6a9}\u{fe0f}?
+  # 2-char base \w option:  \u{1f1ef}\u{1f1f5}\u{fe0f}?
+  # 1-char base \w options: \u{0031}(?:\u{fe0f}\u{20e3}|\u{20e3}\u{fe0f})?
   def unicode_matcher(patterns)
+    return patterns.first if patterns.length == 1
+
+    # Sort patterns, longest to shortest:
     patterns.sort! { |a, b| b.length - a.length }
-    base = patterns.pop
+
+    # Select a base pattern:
+    # this is the shortest prefix contained by all patterns.
+    base = patterns.last
+
+    if patterns.all? { |p| p.start_with?(base) }
+      base = patterns.pop
+    else
+      base = base.match(/\\u\{.+?\}/).to_s
+      base = nil unless patterns.all? { |p| p.start_with?(base) }
+    end
+
+    # Collect base options and/or alternate patterns:
     opts = []
     alts = []
-
-    patterns.reverse_each do |pattern|
-      if pattern.start_with?(base)
+    patterns.each do |pattern|
+      if base && pattern.start_with?(base)
         opts << pattern.sub(base, '')
       else
         alts << pattern
       end
     end
 
-    base += "(?:#{ opts.join('|') })?" if opts.any?
-    alts << base
-    alts.join('|') if alts.any?
+    # Format base options:
+    if opts.length == 1
+      base += "#{ opts.first }?"
+    elsif opts.length > 1
+      base += "(?:#{ opts.join('|') })?"
+    end
+
+    alts << base if base
+    alts.join('|')
   end
 end
