@@ -70,7 +70,7 @@ end
 # 'Test <img src="unicode/1f609.png" alt=":wink:">'
 ```
 
-*See [emoticons output](https://github.com/gmac/gemoji-parser/blob/master/output/emoticons.txt) for the default emoticon set.*
+See [emoticons output](https://github.com/gmac/gemoji-parser/blob/master/output/emoticons.txt) for the default emoticon set.
 
 **All symbol types**
 
@@ -129,23 +129,23 @@ EmojiParser.rehash!
 
 **Emoticons**
 
-Emoticon patterns are defined through the parser, and are simply mapped to an emoji name that exists within the *gemoji* core (this can be a standard emoji, or a custom emoji that you have added). To see default emoticons, inspect the `EmojiParser.emoticons` hash. For custom emoticons:
+Emoticon [patterns](https://github.com/gmac/gemoji-parser/blob/master/output/emoticons.txt) are defined through the parser, and are simply mapped to an emoji name that exists within the *gemoji* core (this can be a standard emoji name, or a custom name that you have added). To add custom emoticon symbols:
 
 ```ruby
-# Alias a standard emoji:
+# Alias a standard emoji name:
 EmojiParser.emoticons[':@'] = :angry
 
-# Create a custom emoji, and alias it:
+# Create a custom emoji name, and alias it:
 Emoji.create('bill_clinton')
 EmojiParser.emoticons['=:o]'] = :bill_clinton
 
 # IMPORTANT:
-# Rehash once after adding new symbols to Emoji core, or to the EmojiParser:
+# Rehash once after adding any new symbols:
 EmojiParser.rehash!
 ```
 
 ## Shoutout
 
-Thanks to the GitHub team for the [gemoji](https://github.com/github/gemoji) gem, and my esteemed colleague Michael Lovitt for the fantastic [Rubular](http://rubular.com/) regex tool (it has been invaluable for this project).
+Thanks to the GitHub team for the [gemoji](https://github.com/github/gemoji) gem, and my esteemed colleague Michael Lovitt for the fantastic [Rubular](http://rubular.com/) regex tool (it has been invaluable on this project).
 
 🙈 🙊 🙉
