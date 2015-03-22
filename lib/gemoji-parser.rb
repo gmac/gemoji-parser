@@ -78,6 +78,8 @@ module EmojiParser
     emoticon_regex(rehash: true)
   end
 
+  U_FE0F = '\\u{fe0f}'
+
   # Creates an optimized regular expression for matching unicode symbols.
   # - Options: rehash:boolean
   def unicode_regex(opts={})
@@ -93,7 +95,7 @@ module EmojiParser
       pattern << unicode_matcher(u) if u.any?
     end
 
-    @unicode_pattern = pattern.join('|')
+    @unicode_pattern = "(?:#{ pattern.join('|') })#{ U_FE0F }?"
     @unicode_regex = Regexp.new("(#{@unicode_pattern})")
   end
 
@@ -140,6 +142,7 @@ module EmojiParser
   # EU:          (emoticon/unicode-$1)
   # - Options: unicode:boolean, tokens:boolean, emoticons:boolean
   def macro_regex(opts={})
+    opts = { unicode: true, tokens: true, emoticons: true }.merge(opts)
     unicode_regex if opts[:unicode]
     token_regex if opts[:tokens]
     emoticon_regex if opts[:emoticons]
@@ -245,47 +248,24 @@ module EmojiParser
 
   private
 
+  U_FE0F_SUFFIX = Regexp.new(Regexp.escape(U_FE0F)+'$')
+
   # Compiles an optimized unicode pattern for fast matching.
-  # Matchers use as small a base as possible, with added options. Ex:
-  # 1-char base \w option:  \u{1f6a9}\u{fe0f}?
-  # 2-char base \w option:  \u{1f1ef}\u{1f1f5}\u{fe0f}?
-  # 1-char base \w options: \u{0031}(?:\u{fe0f}\u{20e3}|\u{20e3}\u{fe0f})?
   def unicode_matcher(patterns)
+    # Strip off all trailing U_FE0F characters:
+    patterns.map! { |p| p.gsub(U_FE0F_SUFFIX, '') }.uniq!
+
+    # Return a single pattern directly:
     return patterns.first if patterns.length == 1
 
     # Sort patterns, longest to shortest:
     patterns.sort! { |a, b| b.length - a.length }
 
-    # Select a base pattern:
-    # this is the shortest prefix contained by all patterns.
-    base = patterns.last
-
-    if patterns.all? { |p| p.start_with?(base) }
-      base = patterns.pop
+    # Use the longest pattern with U_FE0F optionalized, if possible:
+    if patterns.all? { |p| p.gsub(U_FE0F, '') == patterns.last }
+      patterns.first.gsub(U_FE0F, U_FE0F+'?')
     else
-      base = base.match(/\\u\{.+?\}/).to_s
-      base = nil unless patterns.all? { |p| p.start_with?(base) }
+      patterns.join('|')
     end
-
-    # Collect base options and/or alternate patterns:
-    opts = []
-    alts = []
-    patterns.each do |pattern|
-      if base && pattern.start_with?(base)
-        opts << pattern.sub(base, '')
-      else
-        alts << pattern
-      end
-    end
-
-    # Format base options:
-    if opts.length == 1
-      base += "#{ opts.first }?"
-    elsif opts.length > 1
-      base += "(?:#{ opts.join('|') })?"
-    end
-
-    alts << base if base
-    alts.join('|')
   end
 end

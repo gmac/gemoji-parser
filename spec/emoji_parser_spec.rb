@@ -50,6 +50,16 @@ describe EmojiParser do
     end
   end
 
+  describe '#rehash!' do
+    it 'regenerates all cached regular expressions.' do
+      urx = EmojiParser.unicode_regex
+      erx = EmojiParser.emoticon_regex
+      EmojiParser.rehash!
+      expect(EmojiParser.unicode_regex).not_to be urx
+      expect(EmojiParser.emoticon_regex).not_to be erx
+    end
+  end
+
   describe '#parse_unicode' do
     it 'successfully parses full Gemoji unicode set.' do
       Emoji.all.each do |emoji|

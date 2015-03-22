@@ -70,6 +70,8 @@ end
 # 'Test <img src="unicode/1f609.png" alt=":wink:">'
 ```
 
+*See [emoticons output]() to review the parser's default emoticon set.*
+
 **All symbol types**
 
 Use the `parse` method to target all symbol types with a single parsing pass. Specific symbol types may be excluded using options:
