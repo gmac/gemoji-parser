@@ -70,7 +70,7 @@ end
 # 'Test <img src="unicode/1f609.png" alt=":wink:">'
 ```
 
-*See [emoticons output]() to review the parser's default emoticon set.*
+*See [emoticons output](https://github.com/gmac/gemoji-parser/blob/master/output/emoticons.txt) for the default emoticon set.*
 
 **All symbol types**
 
