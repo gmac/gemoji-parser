@@ -1,6 +1,6 @@
 # gemoji-parser
 
-The missing helper methods for [GitHub's gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by *gemoji*). The parser handles transformations of emoji symbols between unicode (😃), token (`:smile:`), and emoticon (`:-D`) formats; and may perform arbitrary replacement of emoji symbols into custom display formats (such as image tags). Internally, highly-optimized regular expressions are generated and cached to maximize parsing efficiency.
+The missing helper methods for [GitHub's gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by *gemoji*). Parser performs the transformation of emoji symbols between unicode characters (😃), token strings (`:smile:`), and emoticons (`:-D`); and may perform arbitrary replacement of emoji symbols into custom display formats (such as image tags). Internally, highly-optimized regular expressions are generated and cached for efficient parsing.
 
 ## Installation
 
