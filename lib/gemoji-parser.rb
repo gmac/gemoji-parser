@@ -90,11 +90,10 @@ module EmojiParser
       u = emoji.unicode_aliases.map do |str|
         str.codepoints.map { |c| '\u{%s}' % c.to_s(16).rjust(4, '0') }.join('')
       end
-      # Simple method: x10 slower!
-      # pattern.concat u.sort! { |a, b| b.length - a.length }
       pattern << unicode_matcher(u) if u.any?
     end
-
+    # Sort by number of characters... possibly slower due preset popularity-based sort:
+    # pattern.sort! { |a, b| a.count('\\u') - b.count('\\u') }
     @unicode_pattern = "(?:#{ pattern.join('|') })#{ U_FE0F }?"
     @unicode_regex = Regexp.new("(#{@unicode_pattern})")
   end
