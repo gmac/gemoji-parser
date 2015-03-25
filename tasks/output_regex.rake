@@ -5,7 +5,7 @@ def rx(regex, desc)
 end
 
 def w(fp)
-  "output regex: #{fp}"
+  "write: #{fp}"
 end
 
 namespace :output do

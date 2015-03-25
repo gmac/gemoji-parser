@@ -84,16 +84,28 @@ module EmojiParser
   # - Options: rehash:boolean
   def unicode_regex(opts={})
     return @unicode_regex if defined?(@unicode_regex) && !opts[:rehash]
+    
+    scores = JSON.parse(File.read 'db/scores.json')
     pattern = []
 
     Emoji.all.each do |emoji|
-      u = emoji.unicode_aliases.map do |str|
-        str.codepoints.map { |c| '\u{%s}' % c.to_s(16).rjust(4, '0') }.join('')
+      score_id = nil
+      u = emoji.unicode_aliases.map do |char|
+        score_id = char if scores[char]
+        char.codepoints.map { |c| '\u{%s}' % c.to_s(16).rjust(4, '0') }.join('')
       end
-      pattern << unicode_matcher(u) if u.any?
+
+      if u.any?
+        pattern << {
+          :pattern => unicode_matcher(u),
+          :score => score_id ? scores[score_id]['score'] : 0
+        }
+      end
     end
-    # Sort by number of characters... possibly slower due preset popularity-based sort:
-    # pattern.sort! { |a, b| a.count('\\u') - b.count('\\u') }
+
+    pattern.sort! { |a, b| b[:score] - a[:score] }
+    pattern.map! { |p| p[:pattern] }
+
     @unicode_pattern = "(?:#{ pattern.join('|') })#{ U_FE0F }?"
     @unicode_regex = Regexp.new("(#{@unicode_pattern})")
   end

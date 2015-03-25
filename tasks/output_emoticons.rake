@@ -36,7 +36,7 @@ namespace :output do
     f.close
 
     # Print display:
-    puts "output emoticons: #{fp}"
+    puts "write: #{fp}"
     puts display
   end
   
