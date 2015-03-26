@@ -1,6 +1,6 @@
 # gemoji-parser
 
-The missing helper methods for [GitHub's gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by *gemoji*). Parser performs the transformation of emoji symbols between unicode characters (😃), token strings (`:smile:`), and emoticons (`:-D`); and may perform arbitrary replacement of emoji symbols into custom display formats (such as image tags). Internally, highly-optimized regular expressions are generated and cached for efficient parsing.
+The missing helper methods for [GitHub's gemoji](https://github.com/github/gemoji) gem. This utility provides a parsing API for the `Emoji` corelib (provided by *gemoji*). Parser performs the transformation of emoji symbols between unicode characters (😃), token strings (`:smile:`), and emoticons (`:-D`); and may perform arbitrary replacement of emoji symbols into custom display formats (such as image tags). Internally, [highly-optimized regular expressions](http://product.voxmedia.com/2015/3/25/8292199/optimizing-regex-for-emoji) are generated and cached for efficient parsing.
 
 ## Installation
 
@@ -120,7 +120,7 @@ EmojiParser.image_path('tropical_fish', '//cdn.fu/emoji/')
 
 **Emoji**
 
-The parser plays nicely with custom emoji defined through the *gemoji* core. You just need to call `rehash!` once after adding new emoji symbols to regenerate the parser's regex cache:
+The parser plays nicely with [custom emoji](https://github.com/github/gemoji#adding-new-emoji) defined through the *gemoji* core. You just need to call `rehash!` once after adding new emoji symbols to regenerate the parser's regex cache:
 
 ```ruby
 Emoji.create('boxing_kangaroo') # << WHY IS THIS NOT STANDARD?!
@@ -129,7 +129,7 @@ EmojiParser.rehash!
 
 **Emoticons**
 
-Emoticon [patterns](https://github.com/gmac/gemoji-parser/blob/master/output/emoticons.txt) are defined through the parser, and are simply mapped to an emoji name that exists within the *gemoji* core (this can be a standard emoji name, or a custom name that you have added). To add custom emoticon symbols:
+Emoticon [patterns](https://github.com/gmac/gemoji-parser/blob/master/output/emoticons.txt) are defined through the parser, and are simply mapped to an emoji name that exists within the *gemoji* core (this can be a standard emoji name, or a [custom name](https://github.com/github/gemoji#adding-new-emoji) that you have added). To add custom emoticon symbols:
 
 ```ruby
 # Alias a standard emoji name:
@@ -146,6 +146,6 @@ EmojiParser.rehash!
 
 ## Shoutout
 
-Thanks to the GitHub team for the [gemoji](https://github.com/github/gemoji) gem, and my esteemed colleague Michael Lovitt for the fantastic [Rubular](http://rubular.com/) regex tool (it has been invaluable on this project).
+Thanks to the GitHub team for the [gemoji](https://github.com/github/gemoji) gem, Matthew Rothenberg for [emojitracker](http://www.emojitracker.com/), and my esteemed colleague Michael Lovitt for the fantastic [Rubular](http://rubular.com/) regex tool (it has been invaluable on this project).
 
 🙈 🙊 🙉
