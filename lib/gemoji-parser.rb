@@ -98,7 +98,7 @@ module EmojiParser
       if u.any?
         pattern << {
           :pattern => unicode_matcher(u),
-          :score => score_id ? scores[score_id]['score'] : 0
+          :score => score_id ? scores[score_id].to_i : 0
         }
       end
     end
