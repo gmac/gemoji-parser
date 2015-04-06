@@ -148,7 +148,7 @@ EmojiParser.rehash!
 
 Emoticons are matched using [lookaround patterns](http://www.regular-expressions.info/lookaround.html) that separate the icon from its surrounding text. By default, an emoticon pattern must start a string, end it, and/or be surrounded by whitespace. To adjust these rules, you may modify the `emoticon_lookaround` settings. The following would allow emoticons to be wrapped in HTML tags:
 
-```
+```ruby
 # Allow HTML tags to surround emoticons, ex: "<p>:-)</p>"
 EmojiParser.emoticon_lookaround[:behind] += '|>'
 EmojiParser.emoticon_lookaround[:ahead] += '|<'
