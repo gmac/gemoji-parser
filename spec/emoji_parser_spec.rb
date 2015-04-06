@@ -104,6 +104,23 @@ describe EmojiParser do
     end
   end
 
+  describe '#emoticon_lookaround' do
+    before(:example) do
+      EmojiParser.emoticon_lookaround[:behind] += '|>'
+      EmojiParser.emoticon_lookaround[:ahead] += '|<'
+      EmojiParser.emoticon_regex(rehash: true)
+    end
+
+    after(:example) do
+      EmojiParser.emoticon_lookaround(reset: true)
+    end
+
+    it 'allows customization of emoticon lookaround patterns.' do
+      parsed = EmojiParser.parse_emoticons('<p>:-) Test :-)</p>') { |e| 'X' }
+      expect(parsed).to eq '<p>X Test X</p>'
+    end
+  end
+
   describe '#parse' do
     it 'replaces valid symbols of all types via block transformation.' do
       parsed = EmojiParser.parse(test_mixed) { |e| 'X' }

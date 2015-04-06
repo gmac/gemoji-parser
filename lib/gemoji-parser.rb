@@ -70,6 +70,7 @@ module EmojiParser
 
   attr_writer :emoticons
 
+
   # Rehashes all cached regular expressions.
   # IMPORTANT: call this once after changing emoji characters or emoticon patterns.
   def rehash!
@@ -118,6 +119,17 @@ module EmojiParser
     @token_regex = Regexp.new(@token_pattern)
   end
 
+  # Defines lookaround patterns for matching before and after emoticons.
+  def emoticon_lookaround(opts={})
+    return @emoticon_lookaround if defined?(@emoticon_lookaround) && !opts[:reset]
+    @emoticon_lookaround = {
+      behind: '^|\\s',
+      ahead: '$|\\s'
+    }
+  end
+
+  attr_writer :emoticon_lookaround
+
   # Creates an optimized regular expression for matching emoticon symbols.
   # - Options: rehash:boolean
   def emoticon_regex(opts={})
@@ -142,7 +154,8 @@ module EmojiParser
       end
     end
 
-    @emoticon_pattern = "(?<=^|\\s)(?:#{ pattern.values.join('|') })(?=\\s|$)"
+    lookaround = emoticon_lookaround
+    @emoticon_pattern = "(?<=#{ lookaround[:behind] })(?:#{ pattern.values.join('|') })(?=#{ lookaround[:ahead] })"
     @emoticon_regex = Regexp.new("(#{@emoticon_pattern})")
   end
 
