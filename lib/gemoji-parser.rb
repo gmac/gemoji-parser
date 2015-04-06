@@ -85,8 +85,9 @@ module EmojiParser
   # - Options: rehash:boolean
   def unicode_regex(opts={})
     return @unicode_regex if defined?(@unicode_regex) && !opts[:rehash]
-    
-    scores = JSON.parse(File.read 'db/scores.json')
+  
+    scores_file = File.expand_path('../../db/scores.json', __FILE__)
+    scores = File.open(scores_file, 'r:UTF-8') { |data| JSON.parse(data.read) }
     pattern = []
 
     Emoji.all.each do |emoji|
