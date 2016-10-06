@@ -70,6 +70,27 @@ module EmojiParser
 
   attr_writer :emoticons
 
+  def new_emoji_set
+    new_emoji_set = [
+     ["\u{1f575}", ":sleuth_or_spy:"],
+     ["\u{1f5e8}", ":left_speech_bubble:"],
+     ["\u{1f3cc}", ":golfer:"],
+     ["\u{1f3cb}", ":weight_lifter:"],
+     ["\u{1f3f3}", ":waving_white_flag:"],
+     ["\u{1f3fb}", ":skin-tone-2:"],
+     ["\u{1f3fc}", ":skin-tone-3:"],
+     ["\u{1f3fd}", ":skin-tone-4:"],
+     ["\u{1f3fe}", ":skin-tone-5:"],
+     ["\u{1f3ff}", ":skin-tone-6:"]
+    ]
+
+    new_emoji_set.each do |set|
+      Emoji.create(set[2]) do |char|
+        char.add_alias set[1]
+        char.add_unicode_alias set[0]
+      end
+    end
+  end
 
   # Rehashes all cached regular expressions.
   # IMPORTANT: call this once after changing emoji characters or emoticon patterns.
@@ -88,6 +109,7 @@ module EmojiParser
   
     scores_file = File.expand_path('../../db/scores.json', __FILE__)
     scores = File.open(scores_file, 'r:UTF-8') { |data| JSON.parse(data.read) }
+    @_new_emoji_set ||= new_emoji_set
     pattern = []
 
     Emoji.all.each do |emoji|
