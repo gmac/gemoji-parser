@@ -15,7 +15,7 @@ module EmojiParser
   # >   ":-D" => :smile,
   # >   ":D" => :smile,
   # > }
-  # 
+  #
   # This base set is selected for commonality and high degrees of author intention.
   # If you want more/different emoticons:
   # - Please DO customize the `EmojiParser.emoticons` hash in your app runtime.
@@ -25,12 +25,12 @@ module EmojiParser
   # ---
   # > EmojiParser.emoticons[':-$'] = :grimacing
   # > EmojiParser.rehash!
-  # 
+  #
   # To remove an emoticon:
   # ---
   # > EmojiParser.emoticons.delete(':-$')
   # > EmojiParser.rehash!
-  # 
+  #
   # NOTE: call `rehash!` after making changes to Emoji/emoticon sets.
   # Rehashing updates the parser's regex cache with the latest icons.
   #
@@ -59,7 +59,7 @@ module EmojiParser
     # all patterns are duplicated with the "noseless" variants, ie:  :-) and :)
     emoticons.each_pair do |name, patterns|
       patterns = [patterns] unless patterns.is_a?(Array)
-      patterns.each do |pattern| 
+      patterns.each do |pattern|
         @emoticons[pattern] = name
         @emoticons[pattern.sub(/(?<=:|;|=)-/, '')] = name
       end
@@ -72,16 +72,16 @@ module EmojiParser
 
   def new_emoji_set
     new_emoji_set = [
-     ["\u{1f575}", ":sleuth_or_spy:"],
-     ["\u{1f5e8}", ":left_speech_bubble:"],
-     ["\u{1f3cc}", ":golfer:"],
-     ["\u{1f3cb}", ":weight_lifter:"],
-     ["\u{1f3f3}", ":waving_white_flag:"],
-     ["\u{1f3fb}", ":skin-tone-2:"],
-     ["\u{1f3fc}", ":skin-tone-3:"],
-     ["\u{1f3fd}", ":skin-tone-4:"],
-     ["\u{1f3fe}", ":skin-tone-5:"],
-     ["\u{1f3ff}", ":skin-tone-6:"]
+     ["\u{1f575}", ":sleuth_or_spy:", "spy"],
+     ["\u{1f5e8}", ":left_speech_bubble:", "bubble speech"],
+     ["\u{1f3cc}", ":golfer:", "golfer"],
+     ["\u{1f3cb}", ":weight_lifter:", "weight_lifter"],
+     ["\u{1f3f3}", ":waving_white_flag:", "white flag"],
+     ["\u{1f3fb}", ":skin-tone-2:", "skin-tone-2"],
+     ["\u{1f3fc}", ":skin-tone-3:", "skin-tone-3"],
+     ["\u{1f3fd}", ":skin-tone-4:", "skin-tone-4"],
+     ["\u{1f3fe}", ":skin-tone-5:", "skin-tone-5"],
+     ["\u{1f3ff}", ":skin-tone-6:", "skin-tone-6"]
     ]
 
     new_emoji_set.each do |set|
@@ -106,7 +106,7 @@ module EmojiParser
   # - Options: rehash:boolean
   def unicode_regex(opts={})
     return @unicode_regex if defined?(@unicode_regex) && !opts[:rehash]
-  
+
     scores_file = File.expand_path('../../db/scores.json', __FILE__)
     scores = File.open(scores_file, 'r:UTF-8') { |data| JSON.parse(data.read) }
     @_new_emoji_set ||= new_emoji_set
