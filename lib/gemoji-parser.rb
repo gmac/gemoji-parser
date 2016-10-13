@@ -72,16 +72,18 @@ module EmojiParser
 
   def new_emoji_set
     new_emoji_set = [
-     ["\u{1f575}", ":sleuth_or_spy:", "spy"],
-     ["\u{1f5e8}", ":left_speech_bubble:", "bubble speech"],
-     ["\u{1f3cc}", ":golfer:", "golfer"],
-     ["\u{1f3cb}", ":weight_lifter:", "weight_lifter"],
-     ["\u{1f3f3}", ":waving_white_flag:", "white flag"],
-     ["\u{1f3fb}", ":skin-tone-2:", "skin-tone-2"],
-     ["\u{1f3fc}", ":skin-tone-3:", "skin-tone-3"],
-     ["\u{1f3fd}", ":skin-tone-4:", "skin-tone-4"],
-     ["\u{1f3fe}", ":skin-tone-5:", "skin-tone-5"],
-     ["\u{1f3ff}", ":skin-tone-6:", "skin-tone-6"]
+      ["\u{1f171}", ":b:", "b"],
+      ["\u{270C}", ":v:", "victory"],
+      ["\u{1f3cc}", ":golfer:", "golfer"],
+      ["\u{1f575}", ":sleuth_or_spy:", "spy"],
+      ["\u{1f3cb}", ":weight_lifter:", "weight_lifter"],
+      ["\u{1f3f3}", ":waving_white_flag:", "white flag"],
+      ["\u{1f5e8}", ":left_speech_bubble:", "bubble speech"],
+      ["\u{1f3fb}", ":skin-tone-2:", "skin-tone-2"],
+      ["\u{1f3fc}", ":skin-tone-3:", "skin-tone-3"],
+      ["\u{1f3fd}", ":skin-tone-4:", "skin-tone-4"],
+      ["\u{1f3fe}", ":skin-tone-5:", "skin-tone-5"],
+      ["\u{1f3ff}", ":skin-tone-6:", "skin-tone-6"]
     ]
 
     new_emoji_set.each do |set|
