@@ -4,6 +4,7 @@ require 'gemoji-parser'
 describe EmojiParser do
   let(:test_unicode) { 'Test 🙈 🙊 🙉 😰 :invalid: 🐠. :o)' }
   let(:test_mixed) { 'Test 🙈 🙊 🙉 :cold_sweat: :invalid: :tropical_fish:. :o)' }
+  let(:test_v_11_0) { '🤩 🤨 🤯 🤪 🤬 🤮 🤫 🤭 🧐 🧒 🧑 🧓 🧕 🧔 🤱 🧙 🧚 🧛 🧜 🧝 🧞 🧟 🧖 🧗 🧘 🤟 🤲 🧠 🧡 🧣 🧤 🧥 🧦 🧢 🦓 🦒 🦔 🦕 🦖 🦗 🥥 🥦 🥨 🥩 🥪 🥣 🥫 🥟 🥠 🥡 🥧 🥤 🥢 🛸 🛷 🥌' }
   let(:test_tokens) { 'Test :see_no_evil: :speak_no_evil: :hear_no_evil: :cold_sweat: :invalid: :tropical_fish:. :o)' }
   let(:test_emoticons) { ';-) Test (:cold_sweat:) :) :-D' }
   let(:test_custom) { Emoji.create('custom') }
@@ -146,6 +147,11 @@ describe EmojiParser do
       parsed = EmojiParser.parse('🙈 🙊 :hear_no_evil:') { |e| ":#{e.name}:" }
       expect(parsed).to eq ':see_no_evil: :speak_no_evil: :hear_no_evil:'
     end
+
+    it 'words with emoji 11.0' do
+      parsed = EmojiParser.parse(test_v_11_0) { |e| "X" }
+      expect(parsed).to eq 'X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X'
+    end
   end
 
   describe '#tokenize' do
@@ -176,7 +182,6 @@ describe EmojiParser do
     let (:the_token) { 'monkey_face' }
     let (:the_emoticon) { ':o)' }
     let (:the_emoji) { Emoji.find_by_alias(the_token) }
-    
     it 'returns valid emoji characters.' do
       expect(EmojiParser.find(the_emoji)).to eq the_emoji
     end
